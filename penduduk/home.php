@@ -3,7 +3,10 @@
    ?>
  <div class="row">
     <div class="col-sm-12">
-       <h3>Data Penduduk <a class="btn btn-sm btn-outline-primary float-end" href="tambahPenduduk1.php" role="button"><i class="fa-solid fa-plus me-2"></i>Tambah KK Baru</a></h3>
+       <h3>Data Penduduk 
+         <a class="btn btn-sm btn-outline-primary float-end" id="tambahKKBaru" role="button"><i class="fa-solid fa-plus me-2"></i>Tambah KK Baru</a>
+
+      </h3>
     </div>
  </div>
  <div class="row">

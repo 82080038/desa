@@ -8,6 +8,40 @@ $(document).ready(function() {
 	window.kecamatanTerpilihDb='';
 	window.desaTerpilihDb='';
 	window.dusunTerpilihDb='';
+
+	if (!propinsiTerpilihDb) {
+		propinsiTerpilihDb='12';
+  
+} else {
+  propinsiTerpilihDb=propinsiTerpilihDb;
+}
+if (!kabupatenTerpilihDb) {
+		kabupatenTerpilihDb='12.07';
+  
+} else {
+  kabupatenTerpilihDb=kabupatenTerpilihDb;
+}
+if (!kecamatanTerpilihDb) {
+		kecamatanTerpilihDb='12.07.05';
+  
+} else {
+  kecamatanTerpilihDb=kecamatanTerpilihDb;
+}
+if (!desaTerpilihDb) {
+		desaTerpilihDb='12.07.05.2007';
+  
+} else {
+  desaTerpilihDb=desaTerpilihDb;
+}
+// if (dusunTerpilihDb) {
+// 		desaTerpilihDb='12.07.05.2007';
+  
+// } else {
+//   desaTerpilihDb=desaTerpilihDb;
+// }
+// propinsiTerpilihDb ? propinsiTerpilihDb : 12;
+	console.log('desaTerpilihDb'+desaTerpilihDb);
+	console.log('dusunTerpilihDb'+dusunTerpilihDb);
 	loadAgama();
 	loadJenjangPendidikan();
 	loadPekerjaan();
