@@ -1,6 +1,41 @@
 $(document).ready(function () {
 	console.log('propinsiTerpilihDb'+propinsiTerpilihDb);
 	console.log('kabupatenTerpilihDb'+kabupatenTerpilihDb);
+	$("#inputTanggalLahirWarga").typeADate();
+	$("#inputTanggalLahirWarga").on('blur', function(event) {
+		event.preventDefault();
+		var reg = /(0[1-9]|[12][0-9]|3[01]|DD)[\/](0[1-9]|1[012]|MM)[\/](19[0-9][0-9]|20[0-9][0-9]|YYYY)/;
+		let tanggal=$(this).val();
+		if (reg.test(tanggal) === true) { 
+			console.log(tanggal);
+			var explode = tanggal.split("/");
+			console.log(explode);
+			let tanggalLahir=explode[0];
+			let bulanLahir=explode[1]-1;
+			let tahunLahir=explode[2];
+			var dob = new Date();
+			dob.setFullYear(tahunLahir, bulanLahir, tanggalLahir);
+			var today = new Date();
+			console.log('tanggal : '+dob);
+			console.log('today : '+today);
+			// console.log('d3 : '+d3);
+			var age = Math.floor((today-dob) / (365.25 * 24 * 60 * 60 * 1000));
+			// return (age>0)?$('#inputUmurWarga').val(age):alert('orangnya belum lahir');
+			// 	$(this).val("");
+			// 	$('#inputUmurWarga').val("");
+			// 	return false;
+			if(age>0){
+				$('#inputUmurWarga').val(age);
+			}else{
+				alert('orangnya belum lahir');
+				$(this).val("").focus();
+				$('#inputUmurWarga').val("");
+				return false;
+			}
+		}else{
+			$(this).val("");
+		}
+	});
 	$('#jumlahDataPenduduk').hide();
 	$('#rowDetilDusun').hide();
 	$('#rowDetilKeluarga').hide();
@@ -413,8 +448,9 @@ function loadDataKeluarga(nomorKK) {
 		}
 	});
 }
-$(document).on('click', '#btnTambahKeluarga,#btnLihatWarga', function(event) {
+$(document).on('click', '#btnTambahKeluarga,#btnLihatWarga,#tambahKKBaru', function(event) {
 	event.preventDefault();
+	resetForm();
 	let modeForm=$(this).attr('modeForm');
 	console.log('mode dari tombol'+ modeForm);
 	$('#modeForm option').filter('[value="'+modeForm+'"]').attr('selected', 'selected').change();
@@ -423,11 +459,23 @@ $(document).on('click', '#btnTambahKeluarga,#btnLihatWarga', function(event) {
 	let nomorKK=$(this).attr('nomorKK');
 	let nomorNIK=$(this).attr('id_warga');
 	if(modeForm==='update'){
-		// $('#modeForm option').filter('[value="'+modeDariForm+'"]').attr('selected', 'selected').change();
 		loadDetilWarga(nomorNIK);
-	}else{
-		// $('#modeForm option').filter('[value="'+modeDariForm+'"]').attr('selected', 'selected').change();
+	}else if(modeForm==='tambah'){
 		loadSebagianDataKK(nomorKK);
+	} else if(modeForm==='tambahKK'){
+		$("#formDetilWarga").find('#inputNikKK').focus();
+		$('.judulModalDetilWarga').html('TAMBAH KEPALA KELUARGA');
+		$('#inputNikKK').attr('placeholder', 'masukkan nomor KK 16 digit');
+		$('.tombolSimpan').html('Simpan');
+		$('.tombolBatal').html('Batal');
+		$('#inputKepalaKeluarga').attr('disabled', true);
+		$('#inputKepalaKeluarga').attr('disabled', true);
+		$('#inputNikWarga').attr('disabled', true);
+		$('#inputNamaWarga').attr('disabled', true);
+		$('#modalDetilWarga').modal('show');
+	}
+	else{
+		alert('mode form belum dibuat');
 	}
 });
 function loadSebagianDataKK(nomorKK){
@@ -507,7 +555,7 @@ function loadDetilWarga(nomorNIK) {
 			let Alamat=hasil['detilWarga'][0]['Alamat'];
 			dusunTerpilihDb='';
 			dusunTerpilihDb+=hasil['detilWarga'][0]['Dusun'];
-			console.log('dusunTerpilihDb'+dusunTerpilihDb);
+			// console.log('dusunTerpilihDb'+dusunTerpilihDb);
 			desaTerpilihDb='';
 			desaTerpilihDb+=hasil['detilWarga'][0]['id_desa'];
 			kabupatenTerpilihDb+=hasil['detilWarga'][0]['id_kabupaten'];
@@ -553,42 +601,40 @@ function loadDetilWarga(nomorNIK) {
 		}
 	});
 }
-$('#modalDetilWarga').on('shown.bs.modal', function () {
+$('#modalDetilWarga').on('shown.bs.modal', function (event) {
 	console.log('show');
+	event.stopPropagation();
+	// $("#inputTanggalLahirWarga").datetimepicker({
+	// 	format: 'dd-mm-yyyy',
+	// 	autoclose: true,
+	// 	// todayBtn: true,
+	// 	startView: 4,
+	// 	// beforeShowDay:'enabled',
+	// 	viewSelect: 'year',
+	// 	// minuteStep: 15
+	// 	container: '#modalDetilWarga'
+	// });
 	periksaInputValid();
-	// $('#inputNikWarga').focus();
 })
 $('#modalDetilWarga').on('hidden.bs.modal', function () {
 	resetForm();
 	console.log('hidden');
 })
 function resetForm(){
-	 // $("#formDetilWarga").find('input:text, input:password, input:file').val('');
-	 // // $("#formDetilWarga").find('option selected:value').val('');
-	 // $("#formDetilWarga").find('option').prop('selectedIndex',0);
-	//  $(':input','#formDetilWarga')
- // .not(':button, :submit, :reset, :hidden')
- // .val('')
- // .removeAttr('checked')
- // .removeAttr('selected');
- $('#formDetilWarga')[0].reset();
- $('#modeForm option:selected').removeAttr('selected');
- $('#optGenderWarga option:selected').removeAttr('selected');
- $('#optHubKeluargaWarga option:selected').removeAttr('selected');
- $('#optStatusKawinWarga option:selected').removeAttr('selected');
- $('#optAgamaWarga option:selected').removeAttr('selected');
- $('#optGolDarahWarga option:selected').removeAttr('selected');
- $('#optSukuWarga option:selected').removeAttr('selected');
- $('#optPendidikanWarga option:selected').removeAttr('selected');
- $('#optPekerjaanWarga option:selected').removeAttr('selected');
- $('#optKewarganeraanWarga option:selected').removeAttr('selected');
-	// $('#formDetilWarga').find('select option:selected').removeAttr('selected');
-	 // $('#optPropinsiWarga option:selected').removeAttr('selected');
-	 // load_propinsi();
-    // $("#formDetilWarga").find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
-    $("input,select").each(function() {
-    	$(this).removeClass('error');
-    });
+	$('#formDetilWarga')[0].reset();
+	$('#modeForm option:selected').removeAttr('selected');
+	$('#optGenderWarga option:selected').removeAttr('selected');
+	$('#optHubKeluargaWarga option:selected').removeAttr('selected');
+	$('#optStatusKawinWarga option:selected').removeAttr('selected');
+	$('#optAgamaWarga option:selected').removeAttr('selected');
+	$('#optGolDarahWarga option:selected').removeAttr('selected');
+	$('#optSukuWarga option:selected').removeAttr('selected');
+	$('#optPendidikanWarga option:selected').removeAttr('selected');
+	$('#optPekerjaanWarga option:selected').removeAttr('selected');
+	$('#optKewarganeraanWarga option:selected').removeAttr('selected');
+	$("input,select").each(function() {
+		$(this).removeClass('error');
+	});
 }
 $('#formDetilWarga').on('change', 'input,select', function(event) {
 	event.preventDefault();
@@ -735,17 +781,39 @@ function loadJumlahPenduduk() {
 		}
 	});
 }
-$('#tambahKKBaru').click(function(e){
-	e.preventDefault();
-	$("#modeForm option:contains('tambahKK')").attr('selected', 'selected');
-	$('.judulModalDetilWarga').html('TAMBAH KEPALA KELUARGA');
-	$('#inputNikKK').attr('placeholder', 'masukkan nomor KK 16 digit');
-	$('.tombolSimpan').html('Simpan');
-	$('.tombolBatal').html('Batal');
-	$('#modalDetilWarga').modal('show');
-	$("#formDetilWarga").find('#inputNikKK').focus();
-})
-$(document).on('change', '#inputNikKK', function(event) {
+$(document).on('change', '#inputNikWarga', function(event) {
+	event.preventDefault();
+	let modeForm=$('#modeForm option:selected').val();
+	if(modeForm==='tambah' || modeForm==='tambahKK'){
+		let nomorNIK=$('#inputNikWarga').val();
+		let panjangnomorNIK=nomorNIK.length;
+		if (panjangnomorNIK!=16){
+			alert('Panjang nomor NIK harus 16 digit, anda memasukkan '+panjangnomorKK+'digit');
+			$('#inputNikWarga').focus();
+			$('#inputNikWarga').addClass('error');
+		}else{
+			cariNomorNIK(nomorNIK);
+		}
+	}else{
+		console.log('belum ditentukan');
+	}
+});
+// $(document).on('change', '#inputNikWarga', function(event) {
+// 	event.preventDefault();
+// 	let modeForm=$('#modeForm option:selected').val();
+// 	if(modeForm='tambahKK'){
+// 		let NikWarga=$(this).val();
+// 		let panjangnomorNIKWarga=NikWarga.length;
+// 		if (panjangnomorNIKWarga!=16){
+// 			alert(`NIK yang anda masukkan ${NikWarga} sebanyak ${panjangnomorNIKWarga}, harus 16 digit\nMohon perbaikan !`);
+// 			$(this).focus();
+// 		}else{
+// 			$('#inputNamaWarga').removeAttr('disabled');
+// 			$('#inputNamaWarga').focus();
+// 		}
+// 	}
+// });
+$('#inputNikKK').on('change', function(event) {
 	event.preventDefault();
 	let modeForm=$('#modeForm option:selected').val();
 	if(modeForm='tambahKK'){
@@ -754,47 +822,48 @@ $(document).on('change', '#inputNikKK', function(event) {
 		if (panjangnomorKK!=16){
 			alert('Panjang nomor KK harus 16 digit, anda memasukkan '+panjangnomorKK+'digit');
 			$('#inputNikKK').focus();
-			// return false;
-			// return;
+			$('#inputNikKK').addClass('error');
 		}else{
 			cariNomorKK(nomorKK);
 		}
 	}
+	console.log('change input KK');
+}).on('blur', function(event) {
+	event.preventDefault();
+	/* Act on the event */
+	console.log('input nik kk');
+}).on('focus', function(event) {
+	event.preventDefault();
+	console.log('sedang focus');
 });
-$(document).on('change', '#inputNikWarga', function(event) {
+$(document).on('change', '#inputKepalaKeluarga', function(event) {
 	event.preventDefault();
 	let modeForm=$('#modeForm option:selected').val();
 	if(modeForm='tambahKK'){
-		let nomorNIK=$('#inputNikWarga').val();
-		let panjangnomorNIK=nomorNIK.length;
-		if (panjangnomorNIK!=16){
-			alert('Panjang nomor NIK harus 16 digit, anda memasukkan '+panjangnomorKK+'digit');
-			$('#inputNikWarga').focus();
-			
+		let namaKK=$(this).val();
+		let panjangnomorNamaKK=namaKK.length;
+		if (panjangnomorNamaKK<3){
+			alert(`Nama ${namaKK} masih terlalu pendek\npelit amat !`);
+			$('#inputKepalaKeluarga').focus();
 		}else{
-			cariNomorNIK(nomorNIK);
+			$('#inputNikWarga').removeAttr('disabled');
+			$('#inputNikWarga').focus();
 		}
 	}
 });
-
-$(document).on('focus', '#inputKepalaKeluarga', function(event) {
+$(document).on('focus keyup change', '#inputKepalaKeluarga', function(event) {
 	event.preventDefault();
+	console.log('masuk ke input nama kepala keluarga');
+	// console.log('pemeriksaan error kk'+adaErrorKK);
 	let modeForm=$('#modeForm option:selected').val();
 	let adaErrorKK=$('#inputNikKK').hasClass('error');
-	if(modeForm='tambahKK'){
-		if(adaErrorKK){
-			alert('nomor KK masih salah !');
-			$('#inputNikKK').focus();
-		}
-		// let nomorNIK=$('#inputNikWarga').val();
-		// let panjangnomorNIK=nomorNIK.length;
-		// if (panjangnomorNIK!=16){
-		// 	alert('Panjang nomor NIK harus 16 digit, anda memasukkan '+panjangnomorKK+'digit');
-		// 	$('#inputNikWarga').focus();
-			
-		// }else{
-		// 	cariNomorNIK(nomorNIK);
-		// }
+	console.log('berubah dari input masuk KK');
+	// console.log('adaErrorKK'+adaErrorKK);
+	console.log('pemeriksan error KK: '+adaErrorKK);
+	if(modeForm='tambahKK' && adaErrorKK===true){
+		alert('nomor KK masih salah !');
+		console.log('pemeriksan error KK dari IF: '+adaErrorKK);
+		$('#inputNikKK').focus();
 	}
 });
 function cariNomorKK(nomorKK){
@@ -822,14 +891,19 @@ function cariNomorKK(nomorKK){
 				let nama_kecamatan=hasil.dataKK['nama_kecamatan'];
 				let nama_propinsi=hasil.dataKK['nama_propinsi'];
 				alert(`Maaf...\nNomor KK ${nomorKK}, sudah terdaftar di database, atas nama Kepala Keluarga ${Nama_Kepala_Keluarga}\nDi alamat : ${Alamat} ${nama_dusun}, DESA/KEL. ${nama_desa}, KEC. ${nama_kecamatan}, ${nama_kab_kota}, PROP.${nama_propinsi}\nSilahkan hubungi admin di tempat tersebut.`);
-				
+				// $('#inputNikKK').addClass('error');
+				// $('#inputNikKK').attr('error', 'true');
+				$('#inputKepalaKeluarga').attr('disabled', true);
+				$('#inputNikWarga').attr('disabled', true);
+				$('#inputNamaWarga').attr('disabled', true);
+				// console.log('ada error dari pencarian KK:'+adaErrorKK);
 				$('#inputNikKK').focus();
-				$('#inputNikKK').addClass('error');
 				// return false;
 			}else{
-				$('#inputNikKK').removeClass('error');
+				$('#inputKepalaKeluarga').removeAttr('disabled');
+				// $('#inputNikWarga').removeAttr('disabled');
+				// $('#inputNamaWarga').removeAttr('disabled');
 				$('#inputKepalaKeluarga').focus();
-
 			}
 		}
 	});
@@ -845,9 +919,7 @@ function cariNomorNIK(nomorNIK){
 		url: urlPenduduk,
 		dataType: "json",
 		success: function (hasil) {
-			// console.log('hasil NIK'+hasil);
 			let hasilNIK=hasil.dataNik;
-			// console.log(hasilNIK);
 			let jumlahData=hasil.jumlahData;
 			if(jumlahData>0){
 				let Alamat=hasil.dataNik['Alamat'];
@@ -866,11 +938,13 @@ function cariNomorNIK(nomorNIK){
 				let nama_kecamatan=hasil.dataNik['nama_kecamatan'];
 				let nama_propinsi=hasil.dataNik['nama_propinsi'];
 				let status_hub_keluarga=hasil.dataNik['status_hub_keluarga'];
-				alert(`Maaf...\nNIK ${NIK}, sudah terdaftar di database, atas nama ${Nama_Anggota_Keluarga} di keluarga ${Nama_Kepala_Keluarga}, sebagai ${status_hub_keluarga}\n Di alamat : ${Alamat} ${nama_dusun}, DESA/KEL. ${nama_desa}, KEC. ${nama_kecamatan}, ${nama_kab_kota}, PROP.${nama_propinsi}\nSilahkan hubungi admin di tempat tersebut.`);
+				alert(`Maaf...\nNIK ${NIK}, sudah terdaftar di database, atas nama ${Nama_Anggota_Keluarga},sebagai ${status_hub_keluarga} di keluarga ${Nama_Kepala_Keluarga}\n Di alamat : ${Alamat} ${nama_dusun}, DESA/KEL. ${nama_desa}, KEC. ${nama_kecamatan}, ${nama_kab_kota}, PROP.${nama_propinsi}\nSilahkan hubungi admin di tempat tersebut.`);
 				$('#inputNikWarga').focus();
 				$('#inputNikWarga').addClass('error');
 				// return false;
 			}else{
+				// $('#inputKepalaKeluarga').removeAttr('disabled');
+				$('#inputNamaWarga').removeAttr('disabled');
 				$('#inputNamaWarga').focus();
 			}
 		}

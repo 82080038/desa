@@ -39,15 +39,20 @@
         </select>
      </div>
      <div class="mb-0 mt-0">
-        <label for="inputTanggalLahirWarga" class="form-label">Tempat/Tgl. Lahir/Umur</label>
-        <div class="input-group">
-         <input type="text" class="form-control form-control-sm" id="inputTempatLahirWarga" name="inputTempatLahirWarga">
-         <input type="text" class="form-control form-control-sm" id="inputTanggalLahirWarga" name="inputTanggalLahirWarga">
-         <input type="text" class="form-control form-control-sm" id="inputUmurWarga" name="inputUmurWarga">
-      </div>
-   </div>
-</div>
-<div class="col-md-4 col-sm-12 col-xs-12">
+      <label for="inputTanggalLahirWarga" class="form-label">Tempat/Tgl. Lahir/Umur</label>
+      <div class="input-group input-group-sm">
+       
+       <input type="text" class="form-control"  name="inputTempatLahirWarga" id="inputTempatLahirWarga">
+
+       <input type="text" class="form-control"  name="inputTanggalLahirWarga" id="inputTanggalLahirWarga" placeholder="DD/MM/YYYY">
+
+       <input type="text" class="form-control" id="inputUmurWarga" name="inputUmurWarga">
+
+    </div>
+ </div>
+ </div>
+   
+ <div class="col-md-4 col-sm-12 col-xs-12">
    <div class="mb-0 mt-0">
      <label for="optStatusKawinWarga" class="form-label">Status Kawin</label>
      <select class="form-select form-select-sm" aria-label="Default select example" id="optStatusKawinWarga" name="optStatusKawinWarga">
