@@ -1,17 +1,16 @@
-
 (function ( $ ) {
 	
 $.fn.typeADate = function() {
 	
 	var thisob = $(this);
-	thisob.wrap('<div style="display: inline-block; position:relative;">');
-	thisob.after('<div style="position:absolute; left:0; right:0; top:0; bottom:0; cursor: pointer;" ></div>');
+	// thisob.wrap('<div style="display: inline; position:relative;">');
+	// thisob.after('<div style="position:absolute; left:0; right:0; top:0; bottom:0; cursor: pointer;" ></div>');
 	
 	thisob.val("DD/MM/YYYY");
 	
 	var reg = /(0[1-9]|[12][0-9]|3[01]|DD)[\/](0[1-9]|1[012]|MM)[\/](19[0-9][0-9]|20[0-9][0-9]|YYYY)/;
 	
-	thisob.next().on("click touchstart mouseenter", function() {
+	thisob.next().on("focus touchstart mouseenter keypress", function() {
 		thisob.focus();
 
 		if (reg.test(thisob.val()) === false) { thisob.val("DD/MM/YYYY"); }
@@ -58,7 +57,7 @@ $.fn.typeADate = function() {
 $.fn.typeATime = function() {
 	
 	var thisob = $(this);
-	thisob.wrap('<div style="display: inline-block; position:relative;">');
+	thisob.wrap('<div style="display: inline-block; position:relative; width:50%;">');
 	thisob.after('<div style="position:absolute; left:0; right:0; top:0; bottom:0; cursor: pointer;" ></div>');
 	
 	thisob.val("HH:MM");

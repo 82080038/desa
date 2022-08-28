@@ -48,7 +48,9 @@ if (!desaTerpilihDb) {
 	loadCboKawin();
 	loadGolDarah();
 	loadSuku();
+	loadHubunganKeluarga();
 	load_propinsi();
+
 	function HitungText(){
 		var Teks = $('#inputKK').val().length;
 		var total = document.getElementById('hasil');
@@ -477,4 +479,35 @@ if (!desaTerpilihDb) {
 		});
 	}
 	//DUSUN AKHIR
+
+	//HUBUNGAN KELUARGA
+	function loadHubunganKeluarga() {
+		$('#jumlahDataPenduduk').hide();
+		$('#rowDetilDusun').hide();
+		const perintah = 'loadHubunganKeluarga';
+		$.ajax({
+			beforeSend: function () {
+				$('#info').html("Tunggu...Sedang loading data dusun..");
+			},
+			type: "GET",
+			data: 'perintah=' + perintah,
+			url: urlPenduduk,
+			dataType: "json",
+			success: function (hasil) {
+				console.log(hasil);
+				let jumlahData = formatAngka(hasil['jumlahData']);
+				let datahubunganKeluarga=hasil['hubunganKeluarga'];
+				
+				$('#optHubKeluargaWarga').append(`<option value="">-${jumlahData} Pilihan-</option>`);
+				let pilihanHubunganKeluarga='';
+				jQuery.each(datahubunganKeluarga, function(index, value){
+					console.log(value);
+					let namaHubungan=value.status_hub_keluarga;
+					let idHubungan=value.id_hub_keluarga;
+					pilihanHubunganKeluarga+=`<option value="${idHubungan}">${namaHubungan}</option>`;
+				});
+				$('#optHubKeluargaWarga').append(pilihanHubunganKeluarga).change();
+			}
+		});
+	}
 });

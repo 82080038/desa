@@ -1,51 +1,12 @@
 $(document).ready(function () {
-	console.log('propinsiTerpilihDb'+propinsiTerpilihDb);
-	console.log('kabupatenTerpilihDb'+kabupatenTerpilihDb);
-	$("#inputTanggalLahirWarga").typeADate();
-	$("#inputTanggalLahirWarga").on('blur', function(event) {
-		event.preventDefault();
-		var reg = /(0[1-9]|[12][0-9]|3[01]|DD)[\/](0[1-9]|1[012]|MM)[\/](19[0-9][0-9]|20[0-9][0-9]|YYYY)/;
-		let tanggal=$(this).val();
-		if (reg.test(tanggal) === true) { 
-			console.log(tanggal);
-			var explode = tanggal.split("/");
-			console.log(explode);
-			let tanggalLahir=explode[0];
-			let bulanLahir=explode[1]-1;
-			let tahunLahir=explode[2];
-			var dob = new Date();
-			dob.setFullYear(tahunLahir, bulanLahir, tanggalLahir);
-			var today = new Date();
-			console.log('tanggal : '+dob);
-			console.log('today : '+today);
-			// console.log('d3 : '+d3);
-			var age = Math.floor((today-dob) / (365.25 * 24 * 60 * 60 * 1000));
-			// return (age>0)?$('#inputUmurWarga').val(age):alert('orangnya belum lahir');
-			// 	$(this).val("");
-			// 	$('#inputUmurWarga').val("");
-			// 	return false;
-			if(age>0){
-				$('#inputUmurWarga').val(age);
-			}else{
-				alert('orangnya belum lahir');
-				$(this).val("").focus();
-				$('#inputUmurWarga').val("");
-				return false;
-			}
-		}else{
-			$(this).val("");
-		}
-	});
+	let modeForm='';
 	$('#jumlahDataPenduduk').hide();
 	$('#rowDetilDusun').hide();
 	$('#rowDetilKeluarga').hide();
-	resetForm();
-	function formatAngka(angka) {
-		nomorBaru = Intl.NumberFormat('id-ID').format(angka);
-		return nomorBaru;
-	}
 	loadCboDusun();
-	loadHubunganKeluarga();
+	
+	resetForm();
+	modeForm+=$('#modeForm option:selected').val();
 	function loadCboDusun() {
 		$('#jumlahDataPenduduk').hide();
 		$('#rowDetilDusun').hide();
@@ -59,49 +20,20 @@ $(document).ready(function () {
 			url: urlPenduduk,
 			dataType: "json",
 			success: function (hasil) {
-				console.log(hasil);
+				// console.log(hasil);
 				let jumlahData = formatAngka(hasil['jumlahData']);
 				let datadusun=hasil['data_dusun'];
 				let jumlahDusun=datadusun.length;
 				$('#pilihanDusun').append(`<option value="">-${jumlahData} dusun-</option>`);
 				let pilihanDusun='';
 				jQuery.each(datadusun, function(index, value){
-					console.log(value);
+					// console.log(value);
 					let namadusun=value.nama_dusun;
 					let idDusun=value.idDusun;
 					pilihanDusun+=`<option value="${idDusun}">${namadusun}</option>`;
 				});
 				$('#pilihanDusun').append(pilihanDusun).change();
 				$('#pilihanDusun').removeAttr('hidden');
-			}
-		});
-	}
-	function loadHubunganKeluarga() {
-		$('#jumlahDataPenduduk').hide();
-		$('#rowDetilDusun').hide();
-		const perintah = 'loadHubunganKeluarga';
-		$.ajax({
-			beforeSend: function () {
-				$('#info').html("Tunggu...Sedang loading data dusun..");
-			},
-			type: "GET",
-			data: 'perintah=' + perintah,
-			url: urlPenduduk,
-			dataType: "json",
-			success: function (hasil) {
-				console.log(hasil);
-				let jumlahData = formatAngka(hasil['jumlahData']);
-				let datahubunganKeluarga=hasil['hubunganKeluarga'];
-				// let jumlahDusun=datadusun.length;
-				$('#optHubKeluargaWarga').append(`<option value="">-${jumlahData} Pilihan-</option>`);
-				let pilihanHubunganKeluarga='';
-				jQuery.each(datahubunganKeluarga, function(index, value){
-					console.log(value);
-					let namaHubungan=value.status_hub_keluarga;
-					let idHubungan=value.id_hub_keluarga;
-					pilihanHubunganKeluarga+=`<option value="${idHubungan}">${namaHubungan}</option>`;
-				});
-				$('#optHubKeluargaWarga').append(pilihanHubunganKeluarga).change();
 			}
 		});
 	}
@@ -113,16 +45,23 @@ $(document).ready(function () {
 		LoadDataPendudukDesa();
 		$('#jumlahDataPenduduk').show();
 	});
-	function GetSortOrder(prop) {    
-		return function(a, b) {    
-			if (a[prop] > b[prop]) {    
-				return 1;    
-			} else if (a[prop] < b[prop]) {    
-				return -1;    
-			}    
-			return 0;    
-		}    
-	}  
+	function resetForm(){
+		$('#formDetilWarga')[0].reset();
+		$("#inputTanggalLahirWarga").typeADate();
+		$('#modeForm option:selected').removeAttr('selected');
+		$('#optGenderWarga option:selected').removeAttr('selected');
+		$('#optHubKeluargaWarga option:selected').removeAttr('selected');
+		$('#optStatusKawinWarga option:selected').removeAttr('selected');
+		$('#optAgamaWarga option:selected').removeAttr('selected');
+		$('#optGolDarahWarga option:selected').removeAttr('selected');
+		$('#optSukuWarga option:selected').removeAttr('selected');
+		$('#optPendidikanWarga option:selected').removeAttr('selected');
+		$('#optPekerjaanWarga option:selected').removeAttr('selected');
+		$('#optKewarganeraanWarga option:selected').removeAttr('selected');
+		$("input,select").each(function() {
+			$(this).removeClass('error');
+		});
+	}
 	function LoadDataPendudukDesa() {
 		const perintah = 'LoadDataPendudukDesa';
 		let pilihanDusun=$('#pilihanDusun option:selected').val();
@@ -335,6 +274,7 @@ $(document).on('click', '#barisKepalaKeluarga', function(event) {
 	loadDataKeluarga(nomorKK);
 });
 function loadDataKeluarga(nomorKK) {
+
 	const perintah = 'loadDataKeluargaByKK';
 	$.ajax({
 		beforeSend: function () {
@@ -345,6 +285,7 @@ function loadDataKeluarga(nomorKK) {
 		url: urlPenduduk,
 		dataType: "json",
 		success: function (hasil) {
+			console.log('loadDataKeluarga'+hasil);
 			// console.log('load data keluarga'+hasil);
 			console.log(hasil);
 			$('.judulModalKK').html('');
@@ -448,6 +389,7 @@ function loadDataKeluarga(nomorKK) {
 		}
 	});
 }
+
 $(document).on('click', '#btnTambahKeluarga,#btnLihatWarga,#tambahKKBaru', function(event) {
 	event.preventDefault();
 	resetForm();
@@ -502,7 +444,7 @@ function loadSebagianDataKK(nomorKK){
 			kabupatenTerpilihDb+=hasil['id_kabupaten'];
 			kecamatanTerpilihDb+=hasil['id_kecamatan'];
 			propinsiTerpilihDb+=hasil['id_propinsi'];
-			console.log('Nama_Kepala_Keluarga'+Nama_Kepala_Keluarga);
+			// console.log('Nama_Kepala_Keluarga'+Nama_Kepala_Keluarga);
 			$('.judulModalDetilWarga').html(`TAMBAH DATA KELUARGA : ${Nama_Kepala_Keluarga}`);
 			$('#inputKepalaKeluarga').val(Nama_Kepala_Keluarga).attr('disabled', 'disabled');
 			$('#inputNikKK').val(Kode_Keluarga).attr('disabled', 'disabled');;
@@ -514,7 +456,7 @@ function loadSebagianDataKK(nomorKK){
 			$('#inputAlamatWarga').val(Alamat);
 			$('.tombolSimpan').html(`Simpan <i class="fa-regular fa-floppy-disk"></i>`);
 			$('.tombolBatal').html('Batal');
-			console.log('propinsiTerpilihDb'+propinsiTerpilihDb);
+			// console.log('propinsiTerpilihDb'+propinsiTerpilihDb);
 		}
 	});
 }
@@ -548,6 +490,9 @@ function loadDetilWarga(nomorNIK) {
 			let RW=hasil['detilWarga'][0]['RW'];
 			let Status=hasil['detilWarga'][0]['Status'];
 			let Tanggal_Lahir=hasil['detilWarga'][0]['Tanggal_Lahir'];
+			let explode = Tanggal_Lahir.split("-");
+			let tanggal_lahirBaru=explode[2]+'/'+explode[1]+'/'+explode[0];
+
 			let Tempat_Lahir=hasil['detilWarga'][0]['Tempat_Lahir'];
 			let Usia=hasil['detilWarga'][0]['Usia'];
 			let namaAgama=hasil['detilWarga'][0]['agama1'];
@@ -580,7 +525,7 @@ function loadDetilWarga(nomorNIK) {
 			$('#optGenderWarga option').filter('[value="' + Jenis_Kelamin + '"]').attr('selected', 'selected').change();
 			$('#optHubKeluargaWarga option').filter('[value="' + id_hub_keluarga + '"]').attr('selected', 'selected').change();
 			$('#inputTempatLahirWarga').val(Tempat_Lahir);
-			$('#inputTanggalLahirWarga').val(Tanggal_Lahir);
+			$('#inputTanggalLahirWarga').val(tanggal_lahirBaru).change();
 			$('#inputUmurWarga').val(Usia);
 			$("#optStatusKawinWarga option:contains('"+Status+"')").attr('selected', 'selected');
 			$("#optGolDarahWarga option:contains('"+GDarah+"')").attr('selected', 'selected');
@@ -601,75 +546,6 @@ function loadDetilWarga(nomorNIK) {
 		}
 	});
 }
-$('#modalDetilWarga').on('shown.bs.modal', function (event) {
-	console.log('show');
-	event.stopPropagation();
-	// $("#inputTanggalLahirWarga").datetimepicker({
-	// 	format: 'dd-mm-yyyy',
-	// 	autoclose: true,
-	// 	// todayBtn: true,
-	// 	startView: 4,
-	// 	// beforeShowDay:'enabled',
-	// 	viewSelect: 'year',
-	// 	// minuteStep: 15
-	// 	container: '#modalDetilWarga'
-	// });
-	periksaInputValid();
-})
-$('#modalDetilWarga').on('hidden.bs.modal', function () {
-	resetForm();
-	console.log('hidden');
-})
-function resetForm(){
-	$('#formDetilWarga')[0].reset();
-	$('#modeForm option:selected').removeAttr('selected');
-	$('#optGenderWarga option:selected').removeAttr('selected');
-	$('#optHubKeluargaWarga option:selected').removeAttr('selected');
-	$('#optStatusKawinWarga option:selected').removeAttr('selected');
-	$('#optAgamaWarga option:selected').removeAttr('selected');
-	$('#optGolDarahWarga option:selected').removeAttr('selected');
-	$('#optSukuWarga option:selected').removeAttr('selected');
-	$('#optPendidikanWarga option:selected').removeAttr('selected');
-	$('#optPekerjaanWarga option:selected').removeAttr('selected');
-	$('#optKewarganeraanWarga option:selected').removeAttr('selected');
-	$("input,select").each(function() {
-		$(this).removeClass('error');
-	});
-}
-$('#formDetilWarga').on('change', 'input,select', function(event) {
-	event.preventDefault();
-	periksaInputValid();
-});
-function periksaInputValid(){
-	let isValid;
-	$("input,select").each(function() {
-		var element = $(this);
-		if (element.val() == "") {
-			isValid = false;
-			$(this).addClass('error');
-		}else{
-			$(this).removeClass('error');
-		}
-	});
-}
-$(document).on('click', '.tombolBatal', function(event) {
-	event.preventDefault();
-	console.log('batal');
-	$('.btn_tutup_keluarga').trigger('click');
-	// resetForm();
-});
-$(document).on('click', '.tombolSimpan', function(event) {
-	event.preventDefault();
-	// let pilihanForm=$('#modeForm option:selected').val();
-	let tujuanForm=$('.tombolSimpan').html();
-	// console.log('#pilihanForm'+pilihanForm);
-	console.log('#tujuanForm'+tujuanForm);
-	if(tujuanForm=='Update'){
-		doUpdate();
-	}else{
-		doSimpan();
-	}
-});
 $(document).on('click', '.btnHapusWarga', function(event) {
 	event.preventDefault();
 	let id_warga=$(this).attr('id_warga');
@@ -682,122 +558,122 @@ $(document).on('click', '.btnHapusWarga', function(event) {
 		console.log('Akan melakukan penghapusan');
 	}else{
 		console.log('Tidak akan melakukan penghapusan');
-// return;
+
 }
-// nomorNIK=${NIK} nomorKK=${Kode_Keluarga} namaOrang=${Nama_Anggota_Keluarga}
+
 });
+	$('#modalDetilWarga').on('shown.bs.modal', function (event) {
+		event.stopPropagation();
+		periksaInputValid();
+	})
+	$('#modalDetilWarga').on('hidden.bs.modal', function () {
+		resetForm();
+		
+	})
+	$(document).on('click', '.tombolBatal', function(event) {
+	event.preventDefault();
+	console.log('batal');
+	$('.btn_tutup_keluarga').trigger('click');
+	
+});
+
+	$('#formDetilWarga').on('change', 'input,select', function(event) {
+		event.preventDefault();
+		periksaInputValid();
+	});
+
+	function periksaInputValid(){
+	let isValid;
+	$("input,select").each(function() {
+		var element = $(this);
+		if (element.val() == "") {
+			isValid = false;
+			$(this).addClass('error');
+		}else{
+			$(this).removeClass('error');
+		}
+	});
+}
+
+	$("#formDetilWarga #inputTanggalLahirWarga").on('blur', function() {
+		
+		console.log('blur');
+		var reg = /(0[1-9]|[12][0-9]|3[01]|DD)[\/](0[1-9]|1[012]|MM)[\/](19[0-9][0-9]|20[0-9][0-9]|YYYY)/;
+		let tanggal=$(this).val();
+		if (reg.test(tanggal) === true) { 
+			console.log(tanggal);
+			var explode = tanggal.split("/");
+			console.log(explode);
+			let tanggalLahir=explode[0];
+			let bulanLahir=explode[1]-1;
+			let tahunLahir=explode[2];
+			var dob = new Date();
+			dob.setFullYear(tahunLahir, bulanLahir, tanggalLahir);
+			var today = new Date();
+			console.log('tanggal : '+dob);
+			console.log('today : '+today);
+			// console.log('d3 : '+d3);
+			var age = Math.floor((today-dob) / (365.25 * 24 * 60 * 60 * 1000));
+			console.log('age : '+age);
+			let tambahanHari=2;
+			let hariBertambah=addDays(dob,tambahanHari);
+			console.log('hariBertambah'+hariBertambah);
+			if(age>=0){
+				$('#inputUmurWarga').val(age);
+				// return true;
+			}else{
+				console.log('orangnya belum lahir');
+				
+				$(this).focus().val('').addClass('error');
+				
+			}
+		}else{
+			$(this).focus().val('').addClass('error');
+		}
+	});
+	function addDays(date, days) {
+		var result = new Date(date);
+		result.setDate(result.getDate() + days);
+		return result;
+	}
+	function formatAngka(angka) {
+		nomorBaru = Intl.NumberFormat('id-ID').format(angka);
+		return nomorBaru;
+	}
+	
+	function GetSortOrder(prop) {    
+		return function(a, b) {    
+			if (a[prop] > b[prop]) {    
+				return 1;    
+			} else if (a[prop] < b[prop]) {    
+				return -1;    
+			}    
+			return 0;    
+		}    
+	}  
+	
+$(document).on('click', '.tombolSimpan', function(event) {
+	event.preventDefault();
+	
+	let tujuanForm=$('.tombolSimpan').html();
+	
+	console.log('#tujuanForm'+tujuanForm);
+	if(tujuanForm=='Update'){
+		doUpdate();
+	}else{
+		doSimpan();
+	}
+});
+
 function doUpdate(){
 	console.log('sedang Update');
 }
 function doSimpan(){
 	console.log('sedang simpan baru');
 }
-function loadJumlahPenduduk() {
-	const perintah = 'loadJumlahPenduduk';
-	const type_perintah = 'GET';
-	$.ajax({
-		beforeSend: function () {
-			$('#info').html("Tunggu...Sedang loading data..");
-		},
-		type: "GET",
-		data: 'perintah=' + perintah,
-		url: `${url}${type_perintah}.php`,
-		dataType: "json",
-		success: function (hasil) {
-			let jumlahData = formatAngka(hasil['detilWarga']['jumlahData']);
-			let tanpaKK = formatAngka(hasil['tanpaKK']);
-			let disabilitas = formatAngka(hasil['disabilitas']);
-			let tanpaNIK = formatAngka(hasil['tanpaNIK']);
-			let tanpaDataPekerjaan = formatAngka(hasil['tanpaPekerjaan']);
-			let NIKganda = formatAngka(hasil['NIKganda']);
-			let tanpaDusun = formatAngka(hasil['tanpaDusun']);
-			let tanpaDesa = formatAngka(hasil['tanpaDesa']);
-			let tanpaAlamatJalan = formatAngka(hasil['tanpaJalan']);
-			let tulisanNIK = '';
-			let tulisanNIKganda = '';
-			let dataLengkap = '';
-			if (jumlahData === '0') {
-				tulisanJumlahDataPenduduk = 'Maaf..Belum ada data penduduk.';
-			} else {
-				tulisanJumlahDataPenduduk = `<label class='text text-primary jumlahPenduduk'>Ditemukan ${jumlahData} data penduduk di dalam database.</label><br/>`;
-			}
-			if (tanpaDataPekerjaan === '0') {
-				tulisantanpaDataPekerjaan = '';
-			} else {
-				tulisantanpaDataPekerjaan = `<label class='text text-danger tanpa_pekerjaan'>Ditemukan ${tanpaDataPekerjaan} penduduk tanpa data pekerjaan.</label><br/>`;
-			}
-			if (disabilitas === '0') {
-				tulisanDisabilitas = '';
-			} else {
-				tulisanDisabilitas = `<label class='text text-danger disabilitas'>Ditemukan ${disabilitas} penduduk penyandang disabilitas.</label><br/>`;
-			}
-			if (NIKganda === '0') {
-				tulisanNIKganda = '';
-			} else {
-				tulisanNIKganda = `<label class='text text-danger nik_ganda'>Ditemukan ${NIKganda} NIK Ganda.</label><br/>`;
-			}
-			if (tanpaKK === '0') {
-				tulisanTanpaKK = '';
-			} else {
-				tulisanTanpaKK = `<label class='text text-danger tanpaKK'>Ditemukan ${tanpaKK} penduduk tanpa nomor KK.</label><br/>`;
-			}
-			if (tanpaNIK === '0') {
-				tulisanNIK = '';
-			} else {
-				tulisanNIK = `<label class='text text-danger tanpaNIK'>Ditemukan ${tanpaNIK} Penduduk tanpa NIK sebanyak  data.</label></br>`;
-			}
-			if (tanpaDusun === '0') {
-				tulisanTanpaDusun = '';
-			} else {
-				tulisanTanpaDusun = `<label class='text text-danger tanpaDusun'>Ditemukan sebanyak ${tanpaDusun} penduduk tanpa alamat dusun.</label><br/>`;
-			}
-			if (tanpaDesa === '0') {
-				tulisanTanpaDesa = '';
-			} else {
-				tulisanTanpaDesa = `<label class='text text-danger tanpaDesa'>Ditemukan sebanyak ${tanpaDesa} penduduk tanpa alamat desa.</label></br>`;
-			}
-			if (tanpaAlamatJalan === '0') {
-				tulisantanpaAlamatJalan = '';
-			} else {
-				tulisantanpaAlamatJalan = `<label class='text text-danger tanpaAlamatRumah'>Ditemukan sebanyak ${tanpaAlamatJalan} yang tidak memiliki alamat rumah.</label><br/>`;
-			}
-			dataLengkap += `
-			${tulisantanpaDataPekerjaan}
-			${tulisanDisabilitas}
-			${tulisanTanpaKK}
-			${tulisanNIK}
-			${tulisanNIKganda}
-			${tulisanTanpaDesa}
-			${tulisanTanpaDusun}
-			${tulisantanpaAlamatJalan}
-			`;
-			if (dataLengkap === '') {
-				tulisanDataLengkap = 'Data penduduk Lengkap';
-			} else {
-				tulisanDataLengkap = dataLengkap;
-			}
-			$('#jumlahDataPenduduk').html(tulisanJumlahDataPenduduk);
-			$('#dataLengkap').html(tulisanDataLengkap);
-		}
-	});
-}
-$(document).on('change', '#inputNikWarga', function(event) {
-	event.preventDefault();
-	let modeForm=$('#modeForm option:selected').val();
-	if(modeForm==='tambah' || modeForm==='tambahKK'){
-		let nomorNIK=$('#inputNikWarga').val();
-		let panjangnomorNIK=nomorNIK.length;
-		if (panjangnomorNIK!=16){
-			alert('Panjang nomor NIK harus 16 digit, anda memasukkan '+panjangnomorKK+'digit');
-			$('#inputNikWarga').focus();
-			$('#inputNikWarga').addClass('error');
-		}else{
-			cariNomorNIK(nomorNIK);
-		}
-	}else{
-		console.log('belum ditentukan');
-	}
-});
+
+// 
+
 // $(document).on('change', '#inputNikWarga', function(event) {
 // 	event.preventDefault();
 // 	let modeForm=$('#modeForm option:selected').val();
@@ -908,6 +784,24 @@ function cariNomorKK(nomorKK){
 		}
 	});
 }
+$(document).on('change', '#inputNikWarga', function(event) {
+	event.preventDefault();
+	let modeForm=$('#modeForm option:selected').val();
+	if(modeForm==='tambah' || modeForm==='tambahKK'){
+		let nomorNIK=$('#inputNikWarga').val();
+		let panjangnomorNIK=nomorNIK.length;
+		if (panjangnomorNIK!=16){
+			alert('Panjang nomor NIK harus 16 digit, anda memasukkan '+panjangnomorKK+'digit');
+			$('#inputNikWarga').focus();
+			$('#inputNikWarga').addClass('error');
+		}else{
+			cariNomorNIK(nomorNIK);
+		}
+	}else{
+		console.log('belum ditentukan');
+	}
+});
+
 function cariNomorNIK(nomorNIK){
 	let perintah = 'cariNomorNIK';
 	$.ajax({
@@ -939,17 +833,106 @@ function cariNomorNIK(nomorNIK){
 				let nama_propinsi=hasil.dataNik['nama_propinsi'];
 				let status_hub_keluarga=hasil.dataNik['status_hub_keluarga'];
 				alert(`Maaf...\nNIK ${NIK}, sudah terdaftar di database, atas nama ${Nama_Anggota_Keluarga},sebagai ${status_hub_keluarga} di keluarga ${Nama_Kepala_Keluarga}\n Di alamat : ${Alamat} ${nama_dusun}, DESA/KEL. ${nama_desa}, KEC. ${nama_kecamatan}, ${nama_kab_kota}, PROP.${nama_propinsi}\nSilahkan hubungi admin di tempat tersebut.`);
-				$('#inputNikWarga').focus();
-				$('#inputNikWarga').addClass('error');
-				// return false;
+				$('#inputNikWarga').focus().addClass('error');;
+				
 			}else{
-				// $('#inputKepalaKeluarga').removeAttr('disabled');
+				
 				$('#inputNamaWarga').removeAttr('disabled');
 				$('#inputNamaWarga').focus();
 			}
 		}
 	});
 }
+
+// function loadJumlahPenduduk() {
+// 	const perintah = 'loadJumlahPenduduk';
+// 	const type_perintah = 'GET';
+// 	$.ajax({
+// 		beforeSend: function () {
+// 			$('#info').html("Tunggu...Sedang loading data..");
+// 		},
+// 		type: "GET",
+// 		data: 'perintah=' + perintah,
+// 		url: `${url}${type_perintah}.php`,
+// 		dataType: "json",
+// 		success: function (hasil) {
+// 			let jumlahData = formatAngka(hasil['detilWarga']['jumlahData']);
+// 			let tanpaKK = formatAngka(hasil['tanpaKK']);
+// 			let disabilitas = formatAngka(hasil['disabilitas']);
+// 			let tanpaNIK = formatAngka(hasil['tanpaNIK']);
+// 			let tanpaDataPekerjaan = formatAngka(hasil['tanpaPekerjaan']);
+// 			let NIKganda = formatAngka(hasil['NIKganda']);
+// 			let tanpaDusun = formatAngka(hasil['tanpaDusun']);
+// 			let tanpaDesa = formatAngka(hasil['tanpaDesa']);
+// 			let tanpaAlamatJalan = formatAngka(hasil['tanpaJalan']);
+// 			let tulisanNIK = '';
+// 			let tulisanNIKganda = '';
+// 			let dataLengkap = '';
+// 			if (jumlahData === '0') {
+// 				tulisanJumlahDataPenduduk = 'Maaf..Belum ada data penduduk.';
+// 			} else {
+// 				tulisanJumlahDataPenduduk = `<label class='text text-primary jumlahPenduduk'>Ditemukan ${jumlahData} data penduduk di dalam database.</label><br/>`;
+// 			}
+// 			if (tanpaDataPekerjaan === '0') {
+// 				tulisantanpaDataPekerjaan = '';
+// 			} else {
+// 				tulisantanpaDataPekerjaan = `<label class='text text-danger tanpa_pekerjaan'>Ditemukan ${tanpaDataPekerjaan} penduduk tanpa data pekerjaan.</label><br/>`;
+// 			}
+// 			if (disabilitas === '0') {
+// 				tulisanDisabilitas = '';
+// 			} else {
+// 				tulisanDisabilitas = `<label class='text text-danger disabilitas'>Ditemukan ${disabilitas} penduduk penyandang disabilitas.</label><br/>`;
+// 			}
+// 			if (NIKganda === '0') {
+// 				tulisanNIKganda = '';
+// 			} else {
+// 				tulisanNIKganda = `<label class='text text-danger nik_ganda'>Ditemukan ${NIKganda} NIK Ganda.</label><br/>`;
+// 			}
+// 			if (tanpaKK === '0') {
+// 				tulisanTanpaKK = '';
+// 			} else {
+// 				tulisanTanpaKK = `<label class='text text-danger tanpaKK'>Ditemukan ${tanpaKK} penduduk tanpa nomor KK.</label><br/>`;
+// 			}
+// 			if (tanpaNIK === '0') {
+// 				tulisanNIK = '';
+// 			} else {
+// 				tulisanNIK = `<label class='text text-danger tanpaNIK'>Ditemukan ${tanpaNIK} Penduduk tanpa NIK sebanyak  data.</label></br>`;
+// 			}
+// 			if (tanpaDusun === '0') {
+// 				tulisanTanpaDusun = '';
+// 			} else {
+// 				tulisanTanpaDusun = `<label class='text text-danger tanpaDusun'>Ditemukan sebanyak ${tanpaDusun} penduduk tanpa alamat dusun.</label><br/>`;
+// 			}
+// 			if (tanpaDesa === '0') {
+// 				tulisanTanpaDesa = '';
+// 			} else {
+// 				tulisanTanpaDesa = `<label class='text text-danger tanpaDesa'>Ditemukan sebanyak ${tanpaDesa} penduduk tanpa alamat desa.</label></br>`;
+// 			}
+// 			if (tanpaAlamatJalan === '0') {
+// 				tulisantanpaAlamatJalan = '';
+// 			} else {
+// 				tulisantanpaAlamatJalan = `<label class='text text-danger tanpaAlamatRumah'>Ditemukan sebanyak ${tanpaAlamatJalan} yang tidak memiliki alamat rumah.</label><br/>`;
+// 			}
+// 			dataLengkap += `
+// 			${tulisantanpaDataPekerjaan}
+// 			${tulisanDisabilitas}
+// 			${tulisanTanpaKK}
+// 			${tulisanNIK}
+// 			${tulisanNIKganda}
+// 			${tulisanTanpaDesa}
+// 			${tulisanTanpaDusun}
+// 			${tulisantanpaAlamatJalan}
+// 			`;
+// 			if (dataLengkap === '') {
+// 				tulisanDataLengkap = 'Data penduduk Lengkap';
+// 			} else {
+// 				tulisanDataLengkap = dataLengkap;
+// 			}
+// 			$('#jumlahDataPenduduk').html(tulisanJumlahDataPenduduk);
+// 			$('#dataLengkap').html(tulisanDataLengkap);
+// 		}
+// 	});
+// }
 // function cariPendudukTanpaAlamat() {
 // 	const perintah = 'cariPendudukTanpaAlamat';
 // 	$.ajax({
