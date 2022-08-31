@@ -9,6 +9,7 @@
                  <option value="tambah">tambah</option>
                  <option value="tambahKK">tambahKK</option>
               </select>
+              <input type="text" class="form-control form-control-sm" id="hiddenNIKWarga" name="hiddenNIKWarga" hidden>
               <div class="mb-0 mt-0">
                 <label for="inputNikKK" class="form-label">No. KK</label>
                 <input type="text" class="form-control form-control-sm" id="inputNikKK" name="inputNikKK">
@@ -134,7 +135,7 @@
 </div>
 <div class="mb-0 mt-0">
  <label for="inputHPWarga" class="form-label">HP</label>
- <input type="text" placeholder="Lebih dari 1, Pisah dengan koma" class="form-control form-control-sm" id="inputHPWarga" name="inputHPWarga">
+ <input type="text" placeholder="Mulai dengan angka nol" class="form-control form-control-sm" id="inputHPWarga" name="inputHPWarga">
 </div>
 <button type="button" class="btn btn-sm btn-primary mt-2 float-right tombolSimpan"></button>
 <button class="btn btn-sm btn-warning mt-2 float-right tombolBatal"></button>
