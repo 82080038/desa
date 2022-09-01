@@ -18,7 +18,7 @@ $(document).ready(function () {
 			},
 			type: "POST",
 			data: 'perintah=' + perintah,
-			url: '../API/alamat/alamat_proses.php',
+			url: '../API2/alamat/v1.0.0/proses.php',
 			dataType: "json",
 			success: function (hasil) {
 				console.log(hasil);
@@ -90,7 +90,7 @@ $(document).ready(function () {
 			},
 			type: "POST",
 			data: 'perintah=' + perintah,
-			url: '../API/alamat/alamat_proses.php',
+			url: '../API2/alamat/v1.0.0/proses.php',
 			dataType: "json",
 			success: function (hasil) {
 				console.log(hasil);
@@ -119,7 +119,7 @@ $(document).ready(function () {
 			},
 			type: "POST",
 			data: 'perintah=' + perintah + '&id_propinsi=' + id_propinsi,
-			url: '../API/alamat/alamat_proses.php',
+			url: '../API2/alamat/v1.0.0/proses.php',
 			dataType: "json",
 			success: function (hasil) {
 				console.log(hasil);
@@ -149,7 +149,7 @@ $(document).ready(function () {
 			},
 			type: "POST",
 			data: 'perintah=' + perintah + '&id_kabupaten=' + id_kabupaten,
-			url: '../API/alamat/alamat_proses.php',
+			url: '../API2/alamat/v1.0.0/proses.php',
 			dataType: "json",
 			success: function (hasil) {
 				$('.kecamatan').html('');
@@ -179,7 +179,7 @@ $(document).ready(function () {
 			},
 			type: "POST",
 			data: 'perintah=' + perintah + '&id_kecamatan=' + id_kecamatan,
-			url: '../API/alamat/alamat_proses.php',
+			url: '../API2/alamat/v1.0.0/proses.php',
 			dataType: "json",
 			success: function (hasil) {
 				console.log(hasil);
@@ -209,7 +209,7 @@ $(document).ready(function () {
 			},
 			type: "POST",
 			data: 'perintah=' + perintah + '&id_desa=' + id_desa,
-			url: '../API/alamat/alamat_proses.php',
+			url: '../API2/alamat/v1.0.0/proses.php',
 			dataType: "json",
 			success: function (hasil) {
 				console.log(hasil);
@@ -253,7 +253,7 @@ $(document).ready(function () {
 			},
 			type: "POST",
 			data: 'perintah=' + perintah + '&id_desa=' + id_desa + '&namadusunBaru=' + namadusunBaru,
-			url: '../API/alamat/alamat_proses.php',
+			url: '../API2/alamat/v1.0.0/proses.php',
 			dataType: "json",
 			success: function (hasil) {
 				console.log(hasil);
@@ -290,7 +290,7 @@ $(document).ready(function () {
 			},
 			type: "POST",
 			data: 'perintah=' + perintah + '&id_daftar_Dusun=' + id_daftar_Dusun,
-			url: '../API/alamat/alamat_proses.php',
+			url: '../API2/alamat/v1.0.0/proses.php',
 			dataType: "json",
 			success: function (hasil) {
 				console.log(hasil);
