@@ -22,7 +22,9 @@
     <!-- <script type="text/javascript" src="../js/bootstrap-datetimepicker.js"/></script> -->
     <!-- <script type="text/javascript" src="../js/bootstrap-datetimepicker.id.js"/></script> -->
     <!-- <script type="text/javascript" src="../js/bootstrap-datetimepicker.js"/></script> -->
+     <script type="module" src="../inc/module.js"/></script>
     <script type="text/javascript" src="../inc/main.js"/></script>
+   
     <!-- <script type="text/javascript" src="../inc/jquery.picky.js"/></script> -->
     
     <script src="https://kit.fontawesome.com/fbe9ec3791.js" crossorigin="anonymous"></script>

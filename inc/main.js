@@ -1,65 +1,65 @@
-// https://sqlizer.io/#
 $(document).ready(function() {
-	window.urlUtil = 'http://localhost/API2/util/utils.php';
-	window.urlPenduduk= 'http://localhost/API2/penduduk/v1.0.0/proses.php';
-	window.urlAlamat = 'http://localhost/API2/alamat/v1.0.0/proses.php';
-	window.propinsiTerpilihDb='';
-	window.kabupatenTerpilihDb='';
-	window.kecamatanTerpilihDb='';
-	window.desaTerpilihDb='';
-	window.dusunTerpilihDb='';
-
-	if (!propinsiTerpilihDb) {
-		propinsiTerpilihDb='12';
-  
-} else {
-  propinsiTerpilihDb=propinsiTerpilihDb;
-}
-if (!kabupatenTerpilihDb) {
-		kabupatenTerpilihDb='12.07';
-  
-} else {
-  kabupatenTerpilihDb=kabupatenTerpilihDb;
-}
-if (!kecamatanTerpilihDb) {
-		kecamatanTerpilihDb='12.07.05';
-  
-} else {
-  kecamatanTerpilihDb=kecamatanTerpilihDb;
-}
-if (!desaTerpilihDb) {
-		desaTerpilihDb='12.07.05.2007';
-  
-} else {
-  desaTerpilihDb=desaTerpilihDb;
-}
-// if (dusunTerpilihDb) {
-// 		desaTerpilihDb='12.07.05.2007';
-  
-// } else {
-//   desaTerpilihDb=desaTerpilihDb;
-// }
-// propinsiTerpilihDb ? propinsiTerpilihDb : 12;
-	console.log('desaTerpilihDb'+desaTerpilihDb);
-	console.log('dusunTerpilihDb'+dusunTerpilihDb);
-	loadAgama();
-	loadJenjangPendidikan();
-	loadPekerjaan();
-	loadCboKawin();
-	loadGolDarah();
-	loadSuku();
-	loadHubunganKeluarga();
-	load_propinsi();
-
-	function HitungText(){
-		var Teks = $('#inputKK').val().length;
-		var total = document.getElementById('hasil');
-		total.innerHTML = Teks + ' Karakter';
+	let dataObject = {
+		nickname : 'Budi',
+		game : 'PUBG',
+		weapon : "UZi"
 	}
-	function formatAngka(angka) {
-		nomorBaru = Intl.NumberFormat('id-ID').format(angka)
-		return nomorBaru;
-	}
+	let str = JSON.stringify(dataObject);
+  // let dataAgama=[];
+  window.sessionStorage.setItem("data_object", str)
+  let dataArray = ["sapi", "kambing", "kelinci"];
+  let str2 = JSON.stringify(dataArray);
+  window.sessionStorage.setItem("dataArray", str2);
+	 // localStorage.setItem("xxx", "yyy");
+	 window.urlUtil = '../API/util/utils.php';
+	 window.urlPenduduk= '../API//penduduk/v1.0.0/proses.php';
+	 window.urlAlamat = '../API/alamat/v1.0.0/proses.php';
+	 window.propinsiTerpilihDb='';
+	 window.kabupatenTerpilihDb='';
+	 window.kecamatanTerpilihDb='';
+	 window.desaTerpilihDb='';
+	 window.dusunTerpilihDb='';
+	 window.sessionStorage;
+	 sessionStorage.setItem("xxx", "yyy");
+	 if (!propinsiTerpilihDb) {
+	 	propinsiTerpilihDb='12';
+	 } else {
+	 	propinsiTerpilihDb=propinsiTerpilihDb;
+	 }
+	 if (!kabupatenTerpilihDb) {
+	 	kabupatenTerpilihDb='12.07';
+	 } else {
+	 	kabupatenTerpilihDb=kabupatenTerpilihDb;
+	 }
+	 if (!kecamatanTerpilihDb) {
+	 	kecamatanTerpilihDb='12.07.05';
+	 } else {
+	 	kecamatanTerpilihDb=kecamatanTerpilihDb;
+	 }
+	 if (!desaTerpilihDb) {
+	 	desaTerpilihDb='12.07.05.2007';
+	 } else {
+	 	desaTerpilihDb=desaTerpilihDb;
+	 }
+	 console.log('desaTerpilihDb'+desaTerpilihDb);
+	 console.log('dusunTerpilihDb'+dusunTerpilihDb);
+	 loadAgama();
+	 loadJenjangPendidikan();
+	 loadPekerjaan();
+	 loadCboKawin();
+	 loadGolDarah();
+	 loadSuku();
+	 loadHubunganKeluarga();
+	 load_propinsi();
+	 function HitungText(){
+	 	var Teks = $('#inputKK').val().length;
+	 	var total = document.getElementById('hasil');
+	 	total.innerHTML = Teks + ' Karakter';
+	 }
+	 function formatAngka(angka) {
+	 	nomorBaru = Intl.NumberFormat('id-ID').format(angka)
+	 	return nomorBaru;
+	 }
 	//AGAMA AWAL
 	function loadAgama() {
 		const perintah = 'loadAgama';
@@ -72,7 +72,7 @@ if (!desaTerpilihDb) {
 			url: urlUtil,
 			dataType: "json",
 			success: function (hasil) {
-				console.log('hasil Agama'+hasil);
+				// console.log('hasil Agama'+hasil);
 				let jumlahData = formatAngka(hasil['jumlahData']);
 				let DataAgama=hasil['CboAgama'];
 				let JumlahPilihan=`<option value="" class='disabled'>-${jumlahData} Pilihan-</option>`;
@@ -82,8 +82,9 @@ if (!desaTerpilihDb) {
 					let id_agama=value['id_agama'];
 					let agama=value['agama'];
 					pilihanAgama+=`<option value="${id_agama}">${agama}</option>`;
-					// $('#optAgamaWarga').append(pilihan).change();
 				});
+				let stringAgama=JSON.stringify(DataAgama);
+				window.sessionStorage.setItem("dataAgama", stringAgama);
 				$('#CboAgama,#optAgamaWarga').append(pilihanAgama).change();
 			}
 		});
@@ -106,11 +107,15 @@ if (!desaTerpilihDb) {
 				let JumlahPilihan=`<option value="" class='disabled'>-${jumlahData} Pilihan-</option>`;
 				$('#CboPendidikan, #optPendidikanWarga').append(JumlahPilihan);
 				jQuery.each(DataJenjangPendidikan, function(index, value){
-					let Pendidikan=value['Pendidikan'];
+					let id_pendidikan=value['id_pendidikan'];
+					let jenjangPendidikan=value['jenjangPendidikan'];
+					// let id_pendidikan=value['id_pendidikan'];
 					// let JenjangPendidikan=value['Pendidikan'];
-					let pilihan=`<option value="${Pendidikan}">${Pendidikan}</option>`;
+					let pilihan=`<option value="${id_pendidikan}">${jenjangPendidikan}</option>`;
 					$('#CboPendidikan,#optPendidikanWarga').append(pilihan).change();
 				});
+				let stringPendidikan=JSON.stringify(DataJenjangPendidikan);
+				window.sessionStorage.setItem("dataPendidikan", stringPendidikan);
 			}
 		});
 	}
@@ -208,7 +213,7 @@ if (!desaTerpilihDb) {
 			url: urlUtil,
 			dataType: "json",
 			success: function (hasil) {
-				console.log(hasil);
+				// console.log(hasil);
 				let jumlahData = formatAngka(hasil['jumlahData']);
 				let DataCboSuku=hasil['CboSuku'];
 				let JumlahPilihan=`<option value="" class='bg-secondary'>-${jumlahData} Pilihan-</option>`;
@@ -479,7 +484,6 @@ if (!desaTerpilihDb) {
 		});
 	}
 	//DUSUN AKHIR
-
 	//HUBUNGAN KELUARGA
 	function loadHubunganKeluarga() {
 		$('#jumlahDataPenduduk').hide();
@@ -494,14 +498,13 @@ if (!desaTerpilihDb) {
 			url: urlPenduduk,
 			dataType: "json",
 			success: function (hasil) {
-				console.log(hasil);
+				// console.log(hasil);
 				let jumlahData = formatAngka(hasil['jumlahData']);
 				let datahubunganKeluarga=hasil['hubunganKeluarga'];
-				
 				$('#optHubKeluargaWarga').append(`<option value="">-${jumlahData} Pilihan-</option>`);
 				let pilihanHubunganKeluarga='';
 				jQuery.each(datahubunganKeluarga, function(index, value){
-					console.log(value);
+					// console.log(value);
 					let namaHubungan=value.status_hub_keluarga;
 					let idHubungan=value.id_hub_keluarga;
 					pilihanHubunganKeluarga+=`<option value="${idHubungan}">${namaHubungan}</option>`;

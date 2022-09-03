@@ -1,4 +1,41 @@
 $(document).ready(function () {
+	let yourVariable=sessionStorage.getItem("xxx");
+	 let dataObject = sessionStorage.getItem("data_object");
+	 let dataAgama = sessionStorage.getItem("dataAgama");
+  let str = JSON.parse(dataObject);
+  console.log(str);
+
+  let dataArray= sessionStorage.getItem("dataArray");
+  let dataPendidikan= sessionStorage.getItem("dataPendidikan");
+  let str2 = JSON.parse(dataArray);
+  let arrayPendidikan = JSON.parse(dataPendidikan);
+  console.log(str2);
+  let str3=JSON.parse(dataAgama);
+  // jQuery.each(str3, function(index, value){
+		// 			console.log(value);
+					
+		// 		});
+		for (var i = 0; i < str3.length; i++) {
+			let idAgama=str3[i]['id_agama'];
+			let agama=str3[i]['agama'];
+			console.log(`${idAgama}-->${agama}`);
+			// console.log(str3[i]['agama']);
+		}
+   console.log(dataAgama);
+   for (var i = 0; i < str3.length; i++) {
+			let idAgama=str3[i]['id_agama'];
+			let agama=str3[i]['agama'];
+			console.log(`${idAgama}-->${agama}`);
+			// console.log(str3[i]['agama']);
+		}
+		for (var i = 0; i < arrayPendidikan.length; i++) {
+			let id_pendidikan=arrayPendidikan[i]['id_pendidikan'];
+			let jenjangPendidikan=arrayPendidikan[i]['jenjangPendidikan'];
+			console.log(`${id_pendidikan}-->${jenjangPendidikan}`);
+			// console.log(str3[i]['agama']);
+		}
+   console.log(str3);
+	console.log('yourVariable'+yourVariable);
 	let modeForm='';
 	$('#jumlahDataPenduduk').hide();
 	$('#rowDetilDusun').hide();
@@ -73,7 +110,7 @@ $(document).ready(function () {
 			url: urlPenduduk,
 			dataType: "json",
 			success: function (hasil) {
-				console.log('data penduduk desa'+hasil);
+				// console.log('data penduduk desa'+hasil);
 				let jumlahData = formatAngka(hasil['jumlahSeluruhWarga']);
 				let jumlahKK = formatAngka(hasil['jumlahKK']);
 				let KKlaki_laki = formatAngka(hasil['KKlakiLaki']['LAKI-LAKI']);

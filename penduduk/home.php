@@ -1,6 +1,8 @@
  <?php
  include '../inc/header.php';
+
  ?>
+
  <div class="row">
     <div class="col-sm-12">
        <h3>Data Penduduk 
@@ -96,11 +98,12 @@
    <div class="col" id="dataLengkap" style="font-size: 1em; ">
    </div>
 </div>
+<script type="text/javascript" src="home.js"></script>
+<!-- <script type="text/javascript" src="array.js"></script> -->
 <?php
 include '../inc/footer.php';
 ?>
-<script type="text/javascript" src="home.js">
-</script>
+
 <!-- <a class="btn btn-primary" data-bs-toggle="modal" href="#modalKK" role="button">Open first modal</a> -->
 <div class="modal fade" id="modalKK" aria-hidden="true" aria-labelledby="modalKKToggleLabel" tabindex="-1">
  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
